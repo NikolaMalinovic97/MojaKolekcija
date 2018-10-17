@@ -1,5 +1,6 @@
 package mojaKolekcija;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -7,10 +8,38 @@ import java.util.ListIterator;
 
 public class NikolaLista<T> implements List<T> {
 
-	T niz[];
+	private Object[] niz;
+	private int size;
+	
+	public<T> NikolaLista() {
+		this.size = 2;
+		this.niz = new Object[size];
+	}
+	
+	private boolean trebaPovecati() {
+		Object lastElement = niz[size() - 1];
+		if(lastElement == null)
+			return false;
+		else
+			return true;
+	}
+	
+	private Object[] noviNiz(Object[] stariNiz) {
+		size *= 2;
+		Object[] noviNiz = new Object[size];
+		int i = -1;
+		for (Object element : stariNiz) {
+			i++;
+			noviNiz[i] = element;
+		}
+		return noviNiz;
+	}
 
 	@Override
 	public boolean add(T e) {
+		if(trebaPovecati()) {
+			niz = noviNiz(niz);
+		}
 		int index = -1;
 		for (int i = 0; i < niz.length; i++) {
 			if(! niz[i].equals(null)) {
@@ -26,19 +55,58 @@ public class NikolaLista<T> implements List<T> {
 
 	@Override
 	public void add(int index, T element) {
+		if(trebaPovecati()) {
+			niz = noviNiz(niz);
+		}
+		for (int i = niz.length - 1; i > index; i--) {
+			niz[i] = niz[i-1];
+		}
 		niz[index] = element;
 	}
 
 	@Override
 	public boolean addAll(Collection<? extends T> c) {
-		// TODO Auto-generated method stub
-		return false;
+		if(c.isEmpty())
+			return false;
+		if(trebaPovecati()) {
+			niz = noviNiz(niz);
+		}
+		int index = 0;
+		for (int i = 0; i < niz.length; i++) {
+			if(! niz[i].equals(null)) {
+				index = i + 1;
+			}
+		}
+		for (T element : c) {
+			if(trebaPovecati()) {
+				niz = noviNiz(niz);
+			}
+			niz[index] = element;
+			index++;
+		}
+		return true;
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends T> c) {
-		// TODO Auto-generated method stub
-		return false;
+		if(c.isEmpty())
+			return false;
+		if(trebaPovecati()) {
+			niz = noviNiz(niz);
+		}
+		int inputIndex = index + c.size();
+		for (int i = index; i < c.size() + index; i++) {
+			if(trebaPovecati()) {
+				niz = noviNiz(niz);
+			}
+			niz[inputIndex] = niz[i];
+			inputIndex++;
+		}
+		for (T t : c) {
+			niz[index] = t;
+			index++;
+		}
+		return true;
 	}
 
 	@Override
@@ -50,8 +118,8 @@ public class NikolaLista<T> implements List<T> {
 
 	@Override
 	public boolean contains(Object o) {
-		for (T element : niz) {
-			if(element.equals(o))
+		for (int i = 0; i < niz.length; i++) {
+			if(o==null ? niz[i]==null : o.equals(niz[i]))
 				return true;
 		}
 		return false;
@@ -59,19 +127,23 @@ public class NikolaLista<T> implements List<T> {
 
 	@Override
 	public boolean containsAll(Collection<?> c) {
-		// TODO Auto-generated method stub
-		return false;
+		for (Object o : c) {
+			if(! contains(o))
+				return false;
+		}
+		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public T get(int index) {
-		return niz[index];
+		return (T) niz[index];
 	}
 
 	@Override
 	public int indexOf(Object o) {
 		for (int i = 0; i < niz.length; i++) {
-			if(niz[i].equals(o))
+			if(o==null ? get(i)==null : o.equals(get(i)))
 				return i;
 		}
 		return -1;
@@ -79,8 +151,8 @@ public class NikolaLista<T> implements List<T> {
 
 	@Override
 	public boolean isEmpty() {
-		for (T element : niz) {
-			if(! element.equals(null))
+		for (Object o : niz) {
+			if(! o.equals(null))
 				return false;
 		}
 		return true;
@@ -95,7 +167,7 @@ public class NikolaLista<T> implements List<T> {
 	@Override
 	public int lastIndexOf(Object o) {
 		for (int i = niz.length - 1; i >= 0 ; i--) {
-			if(niz[i].equals(o))
+			if(o==null ? get(i)==null : o.equals(get(i)))
 				return i;
 		}
 		return -1;
@@ -116,11 +188,15 @@ public class NikolaLista<T> implements List<T> {
 	@Override
 	public boolean remove(Object o) {
 		for (int i = 0; i < niz.length; i++) {
-			if(niz[i].equals(o)) {
+			if(o==null ? get(i)==null : o.equals(get(i))) {
 				for (int j = i; j < niz.length - 1; j++) {
 					niz[j] = niz[j+1];
 				}
-				niz[niz.length-1] = null;
+				for (int j = niz.length - 1; j >= 0; j--) {
+					if(niz[j] != null) {
+						break;
+					}
+				}
 				return true;
 			}
 		}
@@ -129,55 +205,103 @@ public class NikolaLista<T> implements List<T> {
 
 	@Override
 	public T remove(int index) {
-		T removed = niz[index];
+		@SuppressWarnings("unchecked")
+		T removed = (T) niz[index];
 		for (int i = index; i < niz.length - 1; i++) {
-			niz[i] = niz[i+1];
-		}	
-		niz[niz.length-1] = null;
+			niz[i] = niz[i + 1];
+		}
+		for (int i = niz.length - 1; i >= 0; i--) {
+			if(niz[i] != null) {
+				break;
+			}
+		}
 		return removed;
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		// TODO Auto-generated method stub
-		return false;
+		if(c.isEmpty())
+			return false;
+		boolean changed = false;
+		for (Object object : c) {
+			while(true) {
+				if(remove(object))
+					changed = true;
+				else
+					break;
+			}
+		}
+		return changed;
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean razliciti = true;
+		for (int i = 0; i < size(); i++) {
+			for (Object object : c) {
+				if(niz[i].equals(object)) {
+					break;
+				}
+				if(i == size() - 1) {
+					razliciti = false;
+				}
+			}
+		}
+		Object[] noviNiz = new Object[size];
+		for (int i = 0, j = 0; i < size(); i++) {
+			for (Object object : c) {
+				if(niz[i].equals(object)) {
+					noviNiz[j] = niz[i];
+					j++;
+					break;
+				}
+			}
+		}
+		niz = noviNiz;
+		return razliciti;
 	}
 
 	@Override
 	public T set(int index, T element) {
-		T replaced = niz[index];
+		@SuppressWarnings("unchecked")
+		T replaced = (T) niz[index];
 		niz[index] = element;
 		return replaced;
 	}
 
 	@Override
 	public int size() {
+		if(niz.length <= 2) {
+			if (niz[0] == null)
+				return 0;
+			else
+				return 1;
+		}
+		
 		for (int i = niz.length - 1; i >= 0; i--) {
-			if(! niz[i].equals(null))
-				return i;
+			if(! (niz[i] == null))
+				return i + 1;
 		}
 		return 0;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<T> subList(int fromIndex, int toIndex) {
 		NikolaLista<T> nl = new NikolaLista<>();
 		for (int i = fromIndex; i <= toIndex; i++) {
-			nl.add(niz[i]);
+			nl.add((T) niz[i]);
 		}
 		return nl;
 	}
 
 	@Override
 	public Object[] toArray() {
-		// TODO Auto-generated method stub
-		return null;
+		Object[] array = new Object[size()];
+		for (int i = 0; i < size(); i++) {
+			array[i] = niz[i];
+		}
+		return array;
 	}
 
 	@Override
