@@ -8,27 +8,29 @@ import java.util.ListIterator;
 
 public class NikolaLista<T> implements List<T> {
 
-	private Object[] niz;
+	private T[] niz;
 	private int size;
 	
-	public<T> NikolaLista() {
+	@SuppressWarnings("unchecked")
+	public NikolaLista() {
 		this.size = 2;
-		this.niz = new Object[size];
+		this.niz = (T[]) new Object[size];
 	}
 	
 	private boolean trebaPovecati() {
-		Object lastElement = niz[size() - 1];
+		T lastElement = niz[size - 1];
 		if(lastElement == null)
 			return false;
 		else
 			return true;
 	}
 	
-	private Object[] noviNiz(Object[] stariNiz) {
+	private T[] noviNiz(T[] stariNiz) {
 		size *= 2;
-		Object[] noviNiz = new Object[size];
+		@SuppressWarnings("unchecked")
+		T[] noviNiz = (T[]) new Object[size];
 		int i = -1;
-		for (Object element : stariNiz) {
+		for (T element : stariNiz) {
 			i++;
 			noviNiz[i] = element;
 		}
@@ -36,7 +38,7 @@ public class NikolaLista<T> implements List<T> {
 	}
 
 	@Override
-	public boolean add(T e) {
+	public boolean add(T t) {
 		if(trebaPovecati()) {
 			niz = noviNiz(niz);
 		}
@@ -46,7 +48,7 @@ public class NikolaLista<T> implements List<T> {
 				index = i + 1;
 			}
 		}
-		niz[index] = e;
+		niz[index] = t;
 		if(index > -1)
 			return true;
 		else
@@ -134,7 +136,6 @@ public class NikolaLista<T> implements List<T> {
 		return true;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public T get(int index) {
 		return (T) niz[index];
@@ -205,7 +206,6 @@ public class NikolaLista<T> implements List<T> {
 
 	@Override
 	public T remove(int index) {
-		@SuppressWarnings("unchecked")
 		T removed = (T) niz[index];
 		for (int i = index; i < niz.length - 1; i++) {
 			niz[i] = niz[i + 1];
@@ -247,7 +247,8 @@ public class NikolaLista<T> implements List<T> {
 				}
 			}
 		}
-		Object[] noviNiz = new Object[size];
+		@SuppressWarnings("unchecked")
+		T[] noviNiz = (T[]) new Object[size];
 		for (int i = 0, j = 0; i < size(); i++) {
 			for (Object object : c) {
 				if(niz[i].equals(object)) {
@@ -263,7 +264,6 @@ public class NikolaLista<T> implements List<T> {
 
 	@Override
 	public T set(int index, T element) {
-		@SuppressWarnings("unchecked")
 		T replaced = (T) niz[index];
 		niz[index] = element;
 		return replaced;
@@ -277,7 +277,6 @@ public class NikolaLista<T> implements List<T> {
 			else
 				return 1;
 		}
-		
 		for (int i = niz.length - 1; i >= 0; i--) {
 			if(! (niz[i] == null))
 				return i + 1;
@@ -285,7 +284,6 @@ public class NikolaLista<T> implements List<T> {
 		return 0;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<T> subList(int fromIndex, int toIndex) {
 		NikolaLista<T> nl = new NikolaLista<>();

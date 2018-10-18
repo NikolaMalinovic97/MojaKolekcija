@@ -6,7 +6,8 @@ public class Test {
 		
 		NikolaLista<Integer> nl = new NikolaLista<>();
 
-		nl.add(1,10);
+		nl.add(10);
+		
 		System.out.println(nl.size());
 	}
 
