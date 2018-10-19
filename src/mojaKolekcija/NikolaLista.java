@@ -40,6 +40,20 @@ public class NikolaLista<T> implements List<T> {
 		niz[size()] = t;
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		String str = "[";
+		if(isEmpty()) {
+			str += "]";
+			return str;
+		}
+		for (int i = 0; i < size() - 1; i++) {
+			str += niz[i] + ", ";
+		}
+		str += niz[size() - 1]	+ "]";	
+		return str;
+	}
 
 	@Override
 	public void add(int index, T element) {

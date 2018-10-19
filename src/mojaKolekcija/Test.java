@@ -1,43 +1,32 @@
 package mojaKolekcija;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.ListIterator;
 
 public class Test {
 
 	public static void main(String[] args) {
 		
-		NikolaLista<Integer> nl = new NikolaLista<>();
-
-		ArrayList<Integer> al = new ArrayList<>();
-
-		al.add(1);
-		al.add(2);
-		al.add(3);
-
-		nl.add(10);
-		nl.add(54);
-		nl.add(41);
-		nl.add(99);
-		nl.add(21);
+		HashSet<Integer> set = new HashSet<>();
+		NikolaSet<Integer> ns = new NikolaSet<>();
 		
-		ListIterator<Integer> it = nl.listIterator(0);
+		set.add(22);
+		set.add(24);
+		set.add(99);
+		set.add(11);
 		
-		int i = 0;
-		while(it.hasNext()) {
-			it.next();
-			if(i == 1)
-				it.remove();
-			i++;
-			System.out.println(it.previous());
-			it.next();
-		}
+		ns.add(24);
+		ns.add(55);
+		ns.add(99);
+		ns.add(38);
+		ns.add(11);		
 		
 		
-		while(it.hasNext()) {
-			System.out.println(it.previous());
-		}
-				
+		System.out.println(set.retainAll(ns));
+		
+		System.out.println(set);
+		
 	}
 
 }
