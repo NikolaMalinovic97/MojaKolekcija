@@ -1,14 +1,13 @@
 package mojaKolekcija;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.ListIterator;
 
 public class Test {
 
 	public static void main(String[] args) {
 		
 		NikolaLista<Integer> nl = new NikolaLista<>();
-		List<Integer> sl = new NikolaLista<>();
 
 		ArrayList<Integer> al = new ArrayList<>();
 
@@ -22,18 +21,23 @@ public class Test {
 		nl.add(99);
 		nl.add(21);
 		
-		Object[] array = new Object[nl.size()];
-		for (int i = 0; i < nl.size(); i++) {
-			System.out.println(array[i]);
+		ListIterator<Integer> it = nl.listIterator(0);
+		
+		int i = 0;
+		while(it.hasNext()) {
+			it.next();
+			if(i == 1)
+				it.remove();
+			i++;
+			System.out.println(it.previous());
+			it.next();
 		}
-		System.out.println("----");
-		nl.toArray(array);
 		
-		for (int i = 0; i < nl.size(); i++) {
-			System.out.println(array[i]);
+		
+		while(it.hasNext()) {
+			System.out.println(it.previous());
 		}
-		
-		
+				
 	}
 
 }

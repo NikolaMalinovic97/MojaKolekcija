@@ -142,8 +142,8 @@ public class NikolaLista<T> implements List<T> {
 
 	@Override
 	public Iterator<T> iterator() {
-		// TODO Auto-generated method stub
-		return null;
+		Iterator<T> iterator = new NikolaListaIterator();
+		return iterator;
 	}
 
 	@Override
@@ -157,14 +157,14 @@ public class NikolaLista<T> implements List<T> {
 
 	@Override
 	public ListIterator<T> listIterator() {
-		// TODO Auto-generated method stub
-		return null;
+		ListIterator<T> listIterator = new NikolaListaListIterator(0);
+		return listIterator;
 	}
 
 	@Override
 	public ListIterator<T> listIterator(int index) {
-		// TODO Auto-generated method stub
-		return null;
+		ListIterator<T> listIterator = new NikolaListaListIterator(index);
+		return listIterator;
 	}
 
 	@Override
@@ -292,4 +292,86 @@ public class NikolaLista<T> implements List<T> {
 		return a;
 	}
 	
+	
+	//------------------------ITERATOR--------------------------
+	
+	private class NikolaListaIterator implements Iterator<T> {
+		
+		private int index = -1;
+		@Override
+		public boolean hasNext() {
+			return index < size() - 1;
+		}
+
+		@Override
+		public T next() {	
+			return niz[++index];
+		}
+	}
+	
+	private class NikolaListaListIterator implements ListIterator<T> {
+
+		private int index;
+		private int call;
+		
+		public NikolaListaListIterator(int index) {
+			this.index = index - 1;
+			this.call = 0;
+		}
+
+		@Override
+		public void add(T e) {
+			index++;
+			NikolaLista.this.add(index, e);
+			call = 1;
+		}
+
+		@Override
+		public boolean hasNext() {
+			return index < size() - 1;
+		}
+
+		@Override
+		public boolean hasPrevious() {
+			return index > 0;
+		}
+
+		@Override
+		public T next() {
+			call = 0;
+			return niz[++index];
+		}
+
+		@Override
+		public int nextIndex() {
+			return index + 1;
+		}
+
+		@Override
+		public T previous() {
+			call = 0;
+			return niz[index--];
+		}
+
+		@Override
+		public int previousIndex() {
+			return index;
+		}
+
+		@Override
+		public void remove() {
+			if(call != 1) {
+				NikolaLista.this.remove(index);
+				call = -1;
+			}
+		}
+
+		@Override
+		public void set(T e) {
+			if(call == 0) {
+				niz[index] = e;
+			}
+		}
+		
+	}
 }
