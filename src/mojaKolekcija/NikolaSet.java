@@ -98,11 +98,10 @@ public class NikolaSet<T> implements Set<T> {
 
 	@Override
 	public boolean isEmpty() {
-		for (T t : niz) {
-			if(t != null)
-				return false;
-		}
-		return true;
+		if(size() == 0)
+			return true;
+		else
+			return false;
 	}
 
 	@Override

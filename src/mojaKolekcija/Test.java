@@ -1,6 +1,7 @@
 package mojaKolekcija;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.ListIterator;
 
@@ -8,25 +9,20 @@ public class Test {
 
 	public static void main(String[] args) {
 		
-		HashSet<Integer> set = new HashSet<>();
-		NikolaSet<Integer> ns = new NikolaSet<>();
+		NikolaMapa<Integer, String> nm = new NikolaMapa<>();
+		HashMap<Integer, String> hm = new HashMap<>();
 		
-		set.add(22);
-		set.add(24);
-		set.add(99);
-		set.add(11);
+		System.out.println(nm.size());
+		System.out.println(nm.size);
 		
-		ns.add(24);
-		ns.add(55);
-		ns.add(99);
-		ns.add(38);
-		ns.add(11);		
+		nm.put(1, "Nikola");
+		nm.put(2, "Stefan");
+		nm.put(3, "Marko");
+		nm.put(4, "uros");
 		
+		System.out.println(nm.put(1, "Nemanja"));
 		
-		System.out.println(set.retainAll(ns));
-		
-		System.out.println(set);
-		
+		System.out.println(nm);
 	}
 
 }

@@ -148,7 +148,7 @@ public class NikolaLista<T> implements List<T> {
 
 	@Override
 	public boolean isEmpty() {
-		if(niz[0] == null)
+		if(size() == 0)
 			return true;
 		else
 			return false;
