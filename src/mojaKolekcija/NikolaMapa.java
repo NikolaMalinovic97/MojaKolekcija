@@ -6,9 +6,9 @@ import java.util.Set;
 
 public class NikolaMapa<K, V> implements Map<K, V> {
 	
-	public K[] nizKey;
-	public V[] nizValue;
-	public int size;
+	private K[] nizKey;
+	private V[] nizValue;
+	private int size;
 
 	@SuppressWarnings("unchecked")
 	public NikolaMapa() {
@@ -85,8 +85,27 @@ public class NikolaMapa<K, V> implements Map<K, V> {
 
 	@Override
 	public Set<Entry<K, V>> entrySet() {
-		// TODO Auto-generated method stub
-		return null;
+		NikolaSet<Entry<K, V>> set = new NikolaSet<>();
+		Entry<K, V> entry = new Entry<K, V>() {
+
+			@Override
+			public K getKey() {
+				return nizKey[0];
+			}
+
+			@Override
+			public V getValue() {
+				return nizValue[0];
+			}
+
+			@Override
+			public V setValue(V value) {
+				return nizValue[0] = value;
+			}
+			
+		};
+		set.add(entry);
+		return set;
 	}
 
 	@Override
@@ -113,8 +132,11 @@ public class NikolaMapa<K, V> implements Map<K, V> {
 
 	@Override
 	public Set<K> keySet() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<K> set = new NikolaSet<>();
+		for (K k : nizKey) {
+			set.add(k);
+		}
+		return set;
 	}
 
 	@Override
@@ -145,14 +167,41 @@ public class NikolaMapa<K, V> implements Map<K, V> {
 
 	@Override
 	public void putAll(Map<? extends K, ? extends V> arg0) {
-		// TODO Auto-generated method stub
-		
+		Set<? extends K> setKey = arg0.keySet();
+		int j = size();
+		for (K k : setKey) {
+			if(trebaPovecati()) {
+				size *= 2;
+				nizKey = noviKeyNiz(nizKey);
+				nizValue = noviValueNiz(nizValue);
+			}
+			nizKey[j] = k;
+			nizValue[j] = arg0.get(k);
+			j++;
+		}
 	}
 
 	@Override
 	public V remove(Object arg0) {
-		// TODO Auto-generated method stub
-		return null;
+		if(containsKey(arg0)) {
+			V returnValue = null;
+			for (int i = 0; i < size(); i++) {
+				if(arg0==null ? nizKey[i]==null : arg0.equals(nizKey[i])) {
+					returnValue = nizValue[i];
+					for (int j = i; j < size() - 1; j++) {
+						nizKey[j] = nizKey[j + 1];
+						nizValue[j] = nizValue[j + 1];
+					}
+					nizKey[size()-1] = null;
+					nizValue[size()] = null;
+					break;
+				}
+			}
+			return returnValue;
+		}
+		else {
+			return null;
+		}
 	}
 
 	@Override
@@ -172,8 +221,11 @@ public class NikolaMapa<K, V> implements Map<K, V> {
 
 	@Override
 	public Collection<V> values() {
-		// TODO Auto-generated method stub
-		return null;
+		Collection<V> kolekcija = new NikolaLista<V>();
+		for (V v : nizValue) {
+			kolekcija.add(v);
+		}
+		return kolekcija;
 	}
 
 }
